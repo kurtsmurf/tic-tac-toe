@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "es-module-shims": "./es-module-shims.js",
+    "preact": "./preact.js",
+    "preact/hooks": "./preact/hooks.js"
+  }
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        #app {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #app div {
+            max-width: 80vw;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+<!--
+    'es-module-shims.js' enables import maps and bare identifiers in es6 import statements
+    without a build step. See:
+
+    https://github.com/guybedford/es-module-shims
+    https://medium.com/@dmnsgn/in-2020-go-bundler-free-eb29c1f05fc9
+-->
+<script defer src="web_modules/es-module-shims.js"></script> 
+<script src="web_modules/import-map.json" type="importmap-shim"></script>
+<script src="main.js" type="module-shim"></script>
+
+</html>
