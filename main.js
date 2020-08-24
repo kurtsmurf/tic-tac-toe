@@ -1,13 +1,13 @@
 import * as preact from 'preact'
 import * as hooks from 'preact/hooks'
 
-const Cell = ({value, position, play}) => (
+const Cell = ({value, position, onClick}) => (
   preact.h(
     'div',
     {
       id: position,
       className: `cell pos-${position}`,
-      onClick: play
+      onClick
     },
     value
   )
@@ -24,7 +24,7 @@ const Board = ({ board, play }) => (
       {
         value,
         position,
-        play: value === "" ? () => play(position) : null
+        onClick: value === "" ? () => play(position) : null
       }
     ))
   )
