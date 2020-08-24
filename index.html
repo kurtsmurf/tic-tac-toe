@@ -15,15 +15,22 @@
 
         .board {
             display: inline-grid;
+            user-select: none;
+        }
+
+        :root {
+            --cell-side-length: min(12rem, min(27vw, 27vh));
+            --grid-line-width: calc(.06 * var(--cell-side-length));
+            --half-grid-line-width: calc(.5 * var(--grid-line-width));
         }
 
         .cell {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            width: 4rem;
-            height: 4rem;
+            font-size: calc(.75 * var(--cell-side-length));
+            width: var(--cell-side-length);
+            height: var(--cell-side-length);
             box-sizing: border-box;
         }
 
@@ -32,19 +39,23 @@
         .pos-2 { grid-area: 1 / 3 / 2 / 4}
 
         .pos-0, .pos-1, .pos-2, .pos-3, .pos-4, .pos-5 {
-            border-bottom: .1rem solid black;
+            border-bottom: solid black;
+            border-bottom-width: var(--half-grid-line-width);
         }
 
         .pos-3, .pos-4, .pos-5, .pos-6, .pos-7, .pos-8 {
-            border-top: .1rem solid black;
+            border-top: solid black;
+            border-top-width: var(--half-grid-line-width);
         }
 
         .pos-0, .pos-3, .pos-6, .pos-1, .pos-4, .pos-7 {
-            border-right: .1rem solid black;
+            border-right: solid black;
+            border-right-width: var(--half-grid-line-width);
         }
 
         .pos-1, .pos-4, .pos-7, .pos-2, .pos-5, .pos-8 {
-            border-left: .1rem solid black;
+            border-left: solid black;
+            border-left-width: var(--half-grid-line-width);
         }
     </style>
 </head>
