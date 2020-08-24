@@ -1,33 +1,59 @@
 import * as preact from 'preact'
 import * as hooks from 'preact/hooks'
 
-const Cell = (value, position) => (
+const Cell = ({value, position, play}) => (
   preact.h(
     'div',
     {
       id: position,
-      className: `cell pos-${position}`
+      className: `cell pos-${position}`,
+      onClick: play
     },
     value
   )
 )
 
-const Board = ({ board }) => {
-  console.log(board)
-
-  return preact.h(
+const Board = ({ board, play }) => (
+  preact.h(
     'div',
-    { className: 'board' },
-    board.map(Cell)
+    {
+      className: 'board'
+    },
+    board.map((value, position) => preact.h(
+      Cell,
+      {
+        value,
+        position,
+        play: value === "" ? () => play(position) : null
+      }
+    ))
   )
-}
+)
 
-const emptyBoard = new Array(9).fill("O")
+const emptyBoard = new Array(9).fill("")
 
 const App = () => {
   const [board, setBoard] = hooks.useState(emptyBoard)
+  const [player, setPlayer] = hooks.useState("X")
 
-  return preact.h(Board, { board })
+  console.log(player)
+
+  const togglePlayer = () => setPlayer(player === "X" ? "O" : "X")
+
+  const getNextBoard = position => {
+    return [
+      ...board.slice(0, position),
+      player,
+      ...board.slice(position + 1)
+    ]
+  }
+
+  const play = position => {
+    setBoard(getNextBoard(position))
+    togglePlayer()
+  }
+
+  return preact.h(Board, { board, play })
 }
 
 preact.render(
