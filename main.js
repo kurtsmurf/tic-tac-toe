@@ -32,11 +32,23 @@ const Board = ({ board, play }) => (
 
 const emptyBoard = new Array(9).fill("")
 
+const winningCombos = [
+  [0,1,2], [3,4,5], [6,7,8],
+  [0,3,6], [1,4,7], [2,5,8],
+  [0,4,8], [2,4,6]
+]
+
+const didWin = (player, board) => {
+  const playerHasCombo = combo => combo
+    .map(position => board[position])
+    .every(value => value === player)
+
+  return winningCombos.some(playerHasCombo)
+}
+
 const App = () => {
   const [board, setBoard] = hooks.useState(emptyBoard)
   const [player, setPlayer] = hooks.useState("X")
-
-  console.log(player)
 
   const togglePlayer = () => setPlayer(player === "X" ? "O" : "X")
 
@@ -49,8 +61,15 @@ const App = () => {
   }
 
   const play = position => {
-    setBoard(getNextBoard(position))
-    togglePlayer()
+    const nextBoard = getNextBoard(position)
+
+    if (didWin(player, nextBoard)) {
+      console.log(`Player ${player} wins!`)
+    } else {
+      togglePlayer()
+    }
+
+    setBoard(nextBoard)
   }
 
   return preact.h(Board, { board, play })
