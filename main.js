@@ -100,11 +100,19 @@ const App = () => {
     setBoard(nextBoard)
   }
 
+  const reset = () => {
+    setBoard(emptyBoard),
+    setPlayer('X'),
+    setGameState(gameStates.playing)
+    setWinningCombo(null)
+  }
+
   return preact.h(
     preact.Fragment,
     {},
     preact.h(Board, { board, play, winningCombo }),
-    preact.h(Prompt, { gameState, player })
+    preact.h(Prompt, { gameState, player }),
+    preact.h('button', { onClick: reset, className: 'reset' }, 'Reset')
   )
 }
 
