@@ -24,22 +24,42 @@ const Board = ({ board, play, winningCombo }) => (
       {
         value,
         position,
-        onClick: value === "" ? () => play(position) : null,
+        onClick: () => play(position),
         highlight: winningCombo && winningCombo.includes(position)
       }
     ))
   )
 )
 
-const Prompt = ({ gameState, player }) => {
-  const prompt =
+const Prompt = ({ gameState, player, reset }) => {
+  const message =
     gameState === gameStates.playing
       ? `Player ${player}'s turn.`
       : gameState === gameStates.won
-        ? `Player ${player} wins!`
-        : `It's a draw :/`
+        ? `Player ${player} wins! `
+        : `It's a draw :/ `
 
-  return preact.h('h1', {}, prompt)
+  const resetButtonStyle =
+    gameState === gameStates.playing
+      ? 'display: none'
+      : null
+
+  const resetButton = preact.h(
+    'button',
+    {
+      onClick: reset,
+      className: 'reset',
+      style: resetButtonStyle
+    },
+    'Reset'
+  )
+
+  return preact.h(
+    'p',
+    { className: 'prompt' },
+    message,
+    resetButton
+  )
 }
 
 const gameStates = {
@@ -55,7 +75,7 @@ const getWinningCombo = (player, board) => {
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
     [0, 4, 8], [2, 4, 6]
-  ]  
+  ]
 
   const playerHasCombo = combo => combo
     .map(position => board[position])
@@ -84,6 +104,7 @@ const App = () => {
 
   const play = position => {
     if (gameState !== gameStates.playing) return
+    if (board[position] !== "") return
 
     const nextBoard = getNextBoard(position)
     const win = getWinningCombo(player, nextBoard)
@@ -102,8 +123,8 @@ const App = () => {
 
   const reset = () => {
     setBoard(emptyBoard),
-    setPlayer('X'),
-    setGameState(gameStates.playing)
+      setPlayer('X'),
+      setGameState(gameStates.playing)
     setWinningCombo(null)
   }
 
@@ -111,8 +132,7 @@ const App = () => {
     preact.Fragment,
     {},
     preact.h(Board, { board, play, winningCombo }),
-    preact.h(Prompt, { gameState, player }),
-    preact.h('button', { onClick: reset, className: 'reset' }, 'Reset')
+    preact.h(Prompt, { gameState, player, reset }),
   )
 }
 
