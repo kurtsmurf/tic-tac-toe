@@ -40,33 +40,62 @@
             background: yellow;
         }
 
-        .prompt, .reset {
+        .prompt,
+        .reset {
             height: 3rem;
             font-size: 2rem;
             font-weight: bold;
             font-family: serif;
         }
 
-        .pos-0 { grid-area: 1 / 1 / 2 / 2}
-        .pos-1 { grid-area: 1 / 2 / 2 / 3}
-        .pos-2 { grid-area: 1 / 3 / 2 / 4}
+        .pos-0 {
+            grid-area: 1 / 1 / 2 / 2
+        }
 
-        .pos-0, .pos-1, .pos-2, .pos-3, .pos-4, .pos-5 {
+        .pos-1 {
+            grid-area: 1 / 2 / 2 / 3
+        }
+
+        .pos-2 {
+            grid-area: 1 / 3 / 2 / 4
+        }
+
+        .pos-0,
+        .pos-1,
+        .pos-2,
+        .pos-3,
+        .pos-4,
+        .pos-5 {
             border-bottom: solid black;
             border-bottom-width: var(--half-grid-line-width);
         }
 
-        .pos-3, .pos-4, .pos-5, .pos-6, .pos-7, .pos-8 {
+        .pos-3,
+        .pos-4,
+        .pos-5,
+        .pos-6,
+        .pos-7,
+        .pos-8 {
             border-top: solid black;
             border-top-width: var(--half-grid-line-width);
         }
 
-        .pos-0, .pos-3, .pos-6, .pos-1, .pos-4, .pos-7 {
+        .pos-0,
+        .pos-3,
+        .pos-6,
+        .pos-1,
+        .pos-4,
+        .pos-7 {
             border-right: solid black;
             border-right-width: var(--half-grid-line-width);
         }
 
-        .pos-1, .pos-4, .pos-7, .pos-2, .pos-5, .pos-8 {
+        .pos-1,
+        .pos-4,
+        .pos-7,
+        .pos-2,
+        .pos-5,
+        .pos-8 {
             border-left: solid black;
             border-left-width: var(--half-grid-line-width);
         }
@@ -84,7 +113,7 @@ in es6 import statements without a build step. See:
 https://github.com/guybedford/es-module-shims
 https://medium.com/@dmnsgn/in-2020-go-bundler-free-eb29c1f05fc9
 -->
-<script defer src="web_modules/es-module-shims.js"></script> 
+<script defer src="web_modules/es-module-shims.js"></script>
 <script src="web_modules/import-map.json" type="importmap-shim"></script>
 <script src="main.js" type="module-shim"></script>
 

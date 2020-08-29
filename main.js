@@ -122,9 +122,9 @@ const App = () => {
   }
 
   const reset = () => {
-    setBoard(emptyBoard),
-      setPlayer('X'),
-      setGameState(gameStates.playing)
+    setBoard(emptyBoard)
+    setPlayer('X')
+    setGameState(gameStates.playing)
     setWinningCombo(null)
   }
 
