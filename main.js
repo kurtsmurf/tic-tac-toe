@@ -19,34 +19,34 @@ const Cell = ({
 )
 
 const Cells = ({
-  board,
-  play,
-  winningCombo
-}) => (
-  board.map(
+  state,
+  dispatch
+}) => {
+  const { board, winningCombo } = state
+
+  return board.map(
     (value, position) => (
       preact.h(
         Cell,
         {
           value,
           position,
-          onClick: () => play(position),
+          onClick: () => dispatch({ type: 'play', position }),
           highlight: winningCombo && winningCombo.includes(position)
         }
       )
     )
   )
-)
+}
 
 const Board = ({
-  board,
-  play,
-  winningCombo
+  state,
+  dispatch
 }) => (
   preact.h(
     'div',
     { className: 'board' },
-    preact.h(Cells, { board, play, winningCombo })
+    preact.h(Cells, { state, dispatch })
   )
 )
 
@@ -66,11 +66,11 @@ const ResetButton = ({
 )
 
 const Prompt = ({
-  gameState,
-  player,
-  reset
+  state,
+  dispatch
 }) => {
-  const message = 
+  const { gameState, player } = state
+  const message =
     gameState === gameStates.playing
       ? `Player ${player}'s turn.`
       : gameState === gameStates.won
@@ -85,7 +85,7 @@ const Prompt = ({
       preact.h(
         ResetButton,
         {
-          onClick: reset,
+          onClick: () => dispatch({ type: 'reset' }),
           shouldDisplay: gameState !== gameStates.playing
         }
       )
@@ -93,13 +93,23 @@ const Prompt = ({
   )
 }
 
-const gameStates = {
-  playing: 0,
-  won: 1,
-  draw: 2
-}
+const Game = ({
+  state,
+  dispatch
+}) => (
+  preact.h(
+    preact.Fragment,
+    {},
+    preact.h(Board, { state, dispatch }),
+    preact.h(Prompt, { state, dispatch })
+  )
+)
 
+const gameStates = { playing: 'playing', won: 'won', draw: 'draw' }
 const emptyBoard = new Array(9).fill('')
+
+const isDraw = board => !board.includes('')
+const isEmpty = board => board === emptyBoard
 
 const getWinningCombo = (player, board) => {
   const winningCombos = [
@@ -115,56 +125,87 @@ const getWinningCombo = (player, board) => {
   return winningCombos.filter(playerHasCombo)[0]
 }
 
-const isDraw = board => !board.includes('')
+const initialState = {
+  board: emptyBoard,
+  player: 'X',
+  gameState: gameStates.playing,
+  winningCombo: null
+}
 
-const App = () => {
-  const [board, setBoard] = hooks.useState(emptyBoard)
-  const [player, setPlayer] = hooks.useState('X')
-  const [gameState, setGameState] = hooks.useState(gameStates.playing)
-  const [winningCombo, setWinningCombo] = hooks.useState(null)
+const reducer = (state, action) => {
+  switch (action.type) {
+    case ('play'): {
+      const { board, player, gameState } = state
+      const { position } = action
+      const gameOver = gameState !== gameStates.playing
+      const cellNotEmpty = board[position] !== ''
 
-  const togglePlayer = () => setPlayer(player === 'X' ? 'O' : 'X')
-
-  const getNextBoard = position => [
-    ...board.slice(0, position),
-    player,
-    ...board.slice(position + 1)
-  ]
-
-  const play = position => {
-    if (gameState !== gameStates.playing) return
-    if (board[position] !== '') return
-
-    const nextBoard = getNextBoard(position)
-    const win = getWinningCombo(player, nextBoard)
-
-    if (win) {
-      setGameState(gameStates.won)
-      setWinningCombo(win)
-    } else if (isDraw(nextBoard)) {
-      setGameState(gameStates.draw)
-    } else {
-      togglePlayer()
+      if (gameOver || cellNotEmpty) {
+        return state
+      } else {
+        return {
+          ...state,
+          board: [
+            ...board.slice(0, position),
+            player,
+            ...board.slice(position + 1)
+          ]
+        }
+      }
     }
 
-    setBoard(nextBoard)
-  }
+    case ('toggle_player'):
+      return {
+        ...state,
+        player: state.player === 'X' ? 'O' : 'X'
+      }
 
-  const reset = () => {
-    setBoard(emptyBoard)
-    setPlayer('X')
-    setGameState(gameStates.playing)
-    setWinningCombo(null)
-  }
+    case ('win'):
+      return {
+        ...state,
+        gameState: gameStates.won,
+        winningCombo: action.winningCombo
+      }
 
-  return (
-    preact.h(
-      preact.Fragment,
-      {},
-      preact.h(Board, { board, play, winningCombo }),
-      preact.h(Prompt, { gameState, player, reset })
-    )
+    case ('draw'):
+      return {
+        ...state,
+        gameState: gameStates.draw
+      }
+
+    case ('reset'):
+      return initialState
+
+    default:
+      return state
+  }
+}
+
+const detectWin = (state, dispatch) => {
+  const { board, player } = state
+
+  if (isEmpty(board)) return
+
+  const winningCombo = getWinningCombo(player, board)
+
+  if (winningCombo) {
+    dispatch({ type: 'win', winningCombo })
+  } else if (isDraw(board)) {
+    dispatch({ type: 'draw' })
+  } else {
+    dispatch({ type: 'toggle_player' })
+  }
+}
+
+const App = () => {
+  const [state, dispatch] = hooks.useReducer(reducer, initialState)
+
+  hooks.useEffect(
+    () => detectWin(state, dispatch),
+    [state.board]
   )
+
+  return preact.h(Game, { state, dispatch })
 }
 
 preact.render(
