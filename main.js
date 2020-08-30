@@ -1,7 +1,12 @@
 import * as preact from 'preact'
 import * as hooks from 'preact/hooks'
 
-const Cell = ({ value, position, onClick, highlight }) => (
+const Cell = ({
+  value,
+  position,
+  onClick,
+  highlight
+}) => (
   preact.h(
     'div',
     {
@@ -13,52 +18,78 @@ const Cell = ({ value, position, onClick, highlight }) => (
   )
 )
 
-const Board = ({ board, play, winningCombo }) => (
-  preact.h(
-    'div',
-    {
-      className: 'board'
-    },
-    board.map((value, position) => preact.h(
-      Cell,
-      {
-        value,
-        position,
-        onClick: () => play(position),
-        highlight: winningCombo && winningCombo.includes(position)
-      }
-    ))
+const Cells = ({
+  board,
+  play,
+  winningCombo
+}) => (
+  board.map(
+    (value, position) => (
+      preact.h(
+        Cell,
+        {
+          value,
+          position,
+          onClick: () => play(position),
+          highlight: winningCombo && winningCombo.includes(position)
+        }
+      )
+    )
   )
 )
 
-const Prompt = ({ gameState, player, reset }) => {
-  const message =
+const Board = ({
+  board,
+  play,
+  winningCombo
+}) => (
+  preact.h(
+    'div',
+    { className: 'board' },
+    preact.h(Cells, { board, play, winningCombo })
+  )
+)
+
+const ResetButton = ({
+  onClick,
+  shouldDisplay
+}) => (
+  preact.h(
+    'button',
+    {
+      onClick,
+      className: 'reset',
+      style: shouldDisplay ? '' : 'display: none'
+    },
+    'Reset'
+  )
+)
+
+const Prompt = ({
+  gameState,
+  player,
+  reset
+}) => {
+  const message = 
     gameState === gameStates.playing
       ? `Player ${player}'s turn.`
       : gameState === gameStates.won
         ? `Player ${player} wins! `
-        : `It's a draw :/ `
+        : 'It\'s a draw :/ '
 
-  const resetButtonStyle =
-    gameState === gameStates.playing
-      ? 'display: none'
-      : null
-
-  const resetButton = preact.h(
-    'button',
-    {
-      onClick: reset,
-      className: 'reset',
-      style: resetButtonStyle
-    },
-    'Reset'
-  )
-
-  return preact.h(
-    'p',
-    { className: 'prompt' },
-    message,
-    resetButton
+  return (
+    preact.h(
+      'p',
+      { className: 'prompt' },
+      message,
+      preact.h(
+        ResetButton,
+        {
+          onClick: reset,
+          shouldDisplay: gameState !== gameStates.playing
+        }
+      )
+    )
   )
 }
 
@@ -68,7 +99,7 @@ const gameStates = {
   draw: 2
 }
 
-const emptyBoard = new Array(9).fill("")
+const emptyBoard = new Array(9).fill('')
 
 const getWinningCombo = (player, board) => {
   const winningCombos = [
@@ -84,15 +115,15 @@ const getWinningCombo = (player, board) => {
   return winningCombos.filter(playerHasCombo)[0]
 }
 
-const isDraw = board => !board.includes("")
+const isDraw = board => !board.includes('')
 
 const App = () => {
   const [board, setBoard] = hooks.useState(emptyBoard)
-  const [player, setPlayer] = hooks.useState("X")
+  const [player, setPlayer] = hooks.useState('X')
   const [gameState, setGameState] = hooks.useState(gameStates.playing)
   const [winningCombo, setWinningCombo] = hooks.useState(null)
 
-  const togglePlayer = () => setPlayer(player === "X" ? "O" : "X")
+  const togglePlayer = () => setPlayer(player === 'X' ? 'O' : 'X')
 
   const getNextBoard = position => {
     return [
@@ -104,7 +135,7 @@ const App = () => {
 
   const play = position => {
     if (gameState !== gameStates.playing) return
-    if (board[position] !== "") return
+    if (board[position] !== '') return
 
     const nextBoard = getNextBoard(position)
     const win = getWinningCombo(player, nextBoard)
@@ -128,11 +159,13 @@ const App = () => {
     setWinningCombo(null)
   }
 
-  return preact.h(
-    preact.Fragment,
-    {},
-    preact.h(Board, { board, play, winningCombo }),
-    preact.h(Prompt, { gameState, player, reset }),
+  return (
+    preact.h(
+      preact.Fragment,
+      {},
+      preact.h(Board, { board, play, winningCombo }),
+      preact.h(Prompt, { gameState, player, reset })
+    )
   )
 }
 
