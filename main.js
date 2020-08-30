@@ -125,13 +125,11 @@ const App = () => {
 
   const togglePlayer = () => setPlayer(player === 'X' ? 'O' : 'X')
 
-  const getNextBoard = position => {
-    return [
-      ...board.slice(0, position),
-      player,
-      ...board.slice(position + 1)
-    ]
-  }
+  const getNextBoard = position => [
+    ...board.slice(0, position),
+    player,
+    ...board.slice(position + 1)
+  ]
 
   const play = position => {
     if (gameState !== gameStates.playing) return
