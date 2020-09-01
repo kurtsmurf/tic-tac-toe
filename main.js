@@ -5,13 +5,16 @@ const Cell = ({
   value,
   position,
   onClick,
-  highlight
+  shouldHighlight
 }) => (
   preact.h(
     'div',
     {
       id: position,
-      className: `cell pos-${position} ${highlight ? 'highlight' : ''}`,
+      className:
+        `cell ` +
+        `pos-${position} ` +
+        (shouldHighlight ? 'highlight ' : ' '),
       onClick
     },
     value
@@ -31,7 +34,8 @@ const Cells = ({
           value,
           position,
           onClick: () => play(position),
-          highlight: winningCombo && winningCombo.includes(position)
+          shouldHighlight: 
+            winningCombo && winningCombo.includes(position)
         }
       )
     )
@@ -75,7 +79,7 @@ const Prompt = ({
       ? `Player ${player}'s turn.`
       : gameState === gameStates.won
         ? `Player ${player} wins! `
-        : 'It\'s a draw :/ '
+        : `It's a draw :/ `
 
   return (
     preact.h(
@@ -112,7 +116,7 @@ const getWinningCombo = (player, board) => {
     .map(position => board[position])
     .every(value => value === player)
 
-  return winningCombos.filter(playerHasCombo)[0]
+  return winningCombos.find(playerHasCombo)
 }
 
 const isDraw = board => !board.includes('')
@@ -132,15 +136,17 @@ const App = () => {
   ]
 
   const play = position => {
-    if (gameState !== gameStates.playing) return
-    if (board[position] !== '') return
+    const gameIsOver = gameState !== gameStates.playing
+    const cellIsNotEmpty = board[position] !== ''
+
+    if (gameIsOver || cellIsNotEmpty) return
 
     const nextBoard = getNextBoard(position)
-    const win = getWinningCombo(player, nextBoard)
+    const combo = getWinningCombo(player, nextBoard)
 
-    if (win) {
+    if (combo) {
       setGameState(gameStates.won)
-      setWinningCombo(win)
+      setWinningCombo(combo)
     } else if (isDraw(nextBoard)) {
       setGameState(gameStates.draw)
     } else {
