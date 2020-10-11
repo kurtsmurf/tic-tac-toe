@@ -16,8 +16,7 @@
   "snowpack": {
     "install": [
       "preact",
-      "preact/hooks",
-      "es-module-shims"
+      "preact/hooks"
     ]
   }
 }

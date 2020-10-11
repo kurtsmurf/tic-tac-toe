@@ -1,5 +1,5 @@
-import * as preact from 'preact'
-import * as hooks from 'preact/hooks'
+import { h, Fragment, render } from './web_modules/preact.js'
+import * as hooks from './web_modules/preact/hooks.js'
 
 const Cell = ({
   value,
@@ -7,74 +7,74 @@ const Cell = ({
   onClick,
   shouldHighlight
 }) => (
-  preact.h(
-    'div',
-    {
-      id: position,
-      className:
-        `cell ` +
-        `pos-${position} ` +
-        (shouldHighlight ? 'highlight ' : ' '),
-      onClick
-    },
-    value
+    h(
+      'div',
+      {
+        id: position,
+        className:
+          `cell ` +
+          `pos-${position} ` +
+          (shouldHighlight ? 'highlight ' : ' '),
+        onClick
+      },
+      value
+    )
   )
-)
 
 const Cells = ({
   board,
   play,
   winningCombo
 }) => (
-  board.map(
-    (value, position) => (
-      preact.h(
-        Cell,
-        {
-          value,
-          position,
-          onClick: () => play(position),
-          shouldHighlight: 
-            winningCombo && winningCombo.includes(position)
-        }
+    board.map(
+      (value, position) => (
+        h(
+          Cell,
+          {
+            value,
+            position,
+            onClick: () => play(position),
+            shouldHighlight:
+              winningCombo && winningCombo.includes(position)
+          }
+        )
       )
     )
   )
-)
 
 const Board = ({
   board,
   play,
   winningCombo
 }) => (
-  preact.h(
-    'div',
-    { className: 'board' },
-    preact.h(Cells, { board, play, winningCombo })
+    h(
+      'div',
+      { className: 'board' },
+      h(Cells, { board, play, winningCombo })
+    )
   )
-)
 
 const ResetButton = ({
   onClick,
   shouldDisplay
 }) => (
-  preact.h(
-    'button',
-    {
-      onClick,
-      className: 'reset',
-      style: shouldDisplay ? '' : 'display: none'
-    },
-    'Reset'
+    h(
+      'button',
+      {
+        onClick,
+        className: 'reset',
+        style: shouldDisplay ? '' : 'display: none'
+      },
+      'Reset'
+    )
   )
-)
 
 const Prompt = ({
   gameState,
   player,
   reset
 }) => {
-  const message = 
+  const message =
     gameState === gameStates.playing
       ? `Player ${player}'s turn.`
       : gameState === gameStates.won
@@ -82,11 +82,11 @@ const Prompt = ({
         : `It's a draw :/ `
 
   return (
-    preact.h(
+    h(
       'p',
       { className: 'prompt' },
       message,
-      preact.h(
+      h(
         ResetButton,
         {
           onClick: reset,
@@ -164,16 +164,16 @@ const App = () => {
   }
 
   return (
-    preact.h(
-      preact.Fragment,
+    h(
+      Fragment,
       {},
-      preact.h(Board, { board, play, winningCombo }),
-      preact.h(Prompt, { gameState, player, reset })
+      h(Board, { board, play, winningCombo }),
+      h(Prompt, { gameState, player, reset })
     )
   )
 }
 
-preact.render(
-  preact.h(App),
+render(
+  h(App),
   document.getElementById('app')
 )
