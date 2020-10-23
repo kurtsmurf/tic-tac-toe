@@ -75,11 +75,9 @@ const Prompt = ({
   reset
 }) => {
   const message =
-    gameState === gameStates.playing
-      ? `Player ${player}'s turn.`
-      : gameState === gameStates.won
-        ? `Player ${player} wins! `
-        : `It's a draw :/ `
+      gameState === gameStates.playing ? `Player ${player}'s turn.`
+    : gameState === gameStates.won ? `Player ${player} wins! `
+    : `It's a draw :/ `
 
   return (
     h(
