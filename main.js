@@ -7,67 +7,67 @@ const Cell = ({
   onClick,
   shouldHighlight
 }) => (
-    h(
-      'div',
-      {
-        id: position,
-        className:
-          `cell ` +
+  h(
+    'div',
+    {
+      id: position,
+      className:
+          'cell ' +
           `pos-${position} ` +
           (shouldHighlight ? 'highlight ' : ' '),
-        onClick
-      },
-      value
-    )
+      onClick
+    },
+    value
   )
+)
 
 const Cells = ({
   board,
   play,
   winningCombo
 }) => (
-    board.map(
-      (value, position) => (
-        h(
-          Cell,
-          {
-            value,
-            position,
-            onClick: () => play(position),
-            shouldHighlight:
+  board.map(
+    (value, position) => (
+      h(
+        Cell,
+        {
+          value,
+          position,
+          onClick: () => play(position),
+          shouldHighlight:
               winningCombo && winningCombo.includes(position)
-          }
-        )
+        }
       )
     )
   )
+)
 
 const Board = ({
   board,
   play,
   winningCombo
 }) => (
-    h(
-      'div',
-      { className: 'board' },
-      h(Cells, { board, play, winningCombo })
-    )
+  h(
+    'div',
+    { className: 'board' },
+    h(Cells, { board, play, winningCombo })
   )
+)
 
 const ResetButton = ({
   onClick,
   shouldDisplay
 }) => (
-    h(
-      'button',
-      {
-        onClick,
-        className: 'reset',
-        style: shouldDisplay ? '' : 'display: none'
-      },
-      'Reset'
-    )
+  h(
+    'button',
+    {
+      onClick,
+      className: 'reset',
+      style: shouldDisplay ? '' : 'display: none'
+    },
+    'Reset'
   )
+)
 
 const Prompt = ({
   gameState,
@@ -75,9 +75,11 @@ const Prompt = ({
   reset
 }) => {
   const message =
-      gameState === gameStates.playing ? `Player ${player}'s turn.`
-    : gameState === gameStates.won ? `Player ${player} wins! `
-    : `It's a draw :/ `
+      gameState === gameStates.playing
+        ? `Player ${player}'s turn.`
+        : gameState === gameStates.won
+          ? `Player ${player} wins! `
+          : 'It\'s a draw :/ '
 
   return (
     h(
