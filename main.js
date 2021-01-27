@@ -1,5 +1,5 @@
-import { h, Fragment, render } from './web_modules/preact.js'
-import * as hooks from './web_modules/preact/hooks.js'
+import { h, Fragment, render } from 'https://cdn.skypack.dev/preact'
+import { useState } from 'https://cdn.skypack.dev/preact/hooks'
 
 const Cell = ({
   value,
@@ -120,10 +120,10 @@ const getWinningCombo = (player, board) => {
 const isDraw = board => !board.includes('')
 
 const App = () => {
-  const [board, setBoard] = hooks.useState(emptyBoard)
-  const [player, setPlayer] = hooks.useState('X')
-  const [gameState, setGameState] = hooks.useState(gameStates.playing)
-  const [winningCombo, setWinningCombo] = hooks.useState(null)
+  const [board, setBoard] = useState(emptyBoard)
+  const [player, setPlayer] = useState('X')
+  const [gameState, setGameState] = useState(gameStates.playing)
+  const [winningCombo, setWinningCombo] = useState(null)
 
   const togglePlayer = () => setPlayer(player === 'X' ? 'O' : 'X')
 
