@@ -5,7 +5,7 @@ const Cell = ({
   value,
   position,
   onClick,
-  shouldHighlight
+  highlighted
 }) => (
   h(
     'div',
@@ -14,7 +14,7 @@ const Cell = ({
       className:
           'cell ' +
           `pos-${position} ` +
-          (shouldHighlight ? 'highlight ' : ' '),
+          (highlighted ? 'highlight ' : ' '),
       onClick
     },
     value
@@ -34,7 +34,7 @@ const Cells = ({
           value,
           position,
           onClick: () => play(position),
-          shouldHighlight:
+          highlighted:
               winningCombo && winningCombo.includes(position)
         }
       )
@@ -56,14 +56,14 @@ const Board = ({
 
 const ResetButton = ({
   onClick,
-  shouldDisplay
+  displayed
 }) => (
   h(
     'button',
     {
       onClick,
       className: 'reset',
-      style: shouldDisplay ? '' : 'display: none'
+      style: displayed ? '' : 'display: none'
     },
     'Reset'
   )
@@ -90,7 +90,7 @@ const Prompt = ({
         ResetButton,
         {
           onClick: reset,
-          shouldDisplay: gameState !== gameStates.playing
+          displayed: gameState !== gameStates.playing
         }
       )
     )
